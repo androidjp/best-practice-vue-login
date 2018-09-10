@@ -12,12 +12,14 @@ Vue.config.productionTip = false;
 
 // api
 import rest from './rest';
+import store from './store';
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   rest,
+  store,
   components: {App},
   template: '<App/>',
 });

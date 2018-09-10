@@ -124,14 +124,17 @@
       },
       async login () {
         let formData = {
-          name: formLogin.user,
-          password: formLogin.password
+          name: this.formLogin.user,
+          password: this.formLogin.password,
         };
-        let response = await this.$rest.login(formData);
-        if(response.success) {
-
+        let response = await this.$rest.user.login(formData).catch(err => {
+          this.$message.error(`[Login Request Error]: ${err.message}`);
+        });
+        if (response && response.success) {
+          this.$message.success(response.message);
+          this.$router.push('/');
         }
-      }
+      },
     },
   };
 </script>
