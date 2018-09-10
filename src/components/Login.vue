@@ -4,7 +4,7 @@
       <Col offset="12">
         <Card style="width:340px; left: -170px;">
           <div style="text-align:center">
-            <Form ref="formLogin" :model="formLogin" :rules="ruleLogin" label-position="top-left"
+            <Form ref="formLogin" :model="formLogin" :rules="ruleLogin" label-position="left"
                   v-show="!isShowRegister">
               <FormItem label="user name (Email/Phone)" prop="user">
                 <Input type="text" v-model="formLogin.user" placeholder="Username">
@@ -38,12 +38,28 @@
             </Form>
           </div>
         </Card>
+        <Card style="width:340px; left: -170px;">
+          <div style="text-align:center">
+            <RadioGroup v-model='authType'>
+              <Radio label='SESSION'></Radio>
+              <Radio label='JWT'></Radio>
+              <Radio label='PASSPORT'></Radio>
+            </RadioGroup>
+          </div>
+        </Card>
       </Col>
     </Row>
   </div>
 </template>
 
 <script>
+  import sha1 from 'sha1';
+  import {
+    mapState,
+    mapGetters,
+    mapActions,
+  } from 'vuex';
+
   export default {
     name: 'Login',
     data () {
@@ -104,14 +120,20 @@
         },
       };
     },
+    computed: {
+      ...mapState({
+        authType: state => state.authType,
+      }),
+    },
     methods: {
+      ...mapActions({
+
+      }),
       handleSubmit (name) {
+        console.log('authType => ', this.authType);
         this.$refs[name].validate((valid) => {
           if (valid) {
-            this.$Message.success('Success!');
-            this.login();
-          } else {
-            this.$Message.error('Fail!');
+            this.isShowRegister ? this.signUp() : this.login();
           }
         });
       },
@@ -123,17 +145,44 @@
         this.$refs[name].resetFields();
       },
       async login () {
+        const msg = this.$Message.loading({
+          content: 'Loading...',
+          duration: 0,
+        });
         let formData = {
           name: this.formLogin.user,
-          password: this.formLogin.password,
+          password: sha1(this.formLogin.password),
         };
-        let response = await this.$rest.user.login(formData).catch(err => {
-          this.$message.error(`[Login Request Error]: ${err.message}`);
-        });
-        if (response && response.success) {
-          this.$message.success(response.message);
-          this.$router.push('/');
+        let response = await this.$rest.user.login(formData);
+        if (response) {
+          if (response.success) {
+            this.$Message.success(response.message);
+            this.$router.push('/');
+          } else {
+            this.$Message.error(response.error);
+          }
         }
+        setTimeout(msg, 10);
+      },
+      async signUp () {
+        const msg = this.$Message.loading({
+          content: 'Loading...',
+          duration: 0,
+        });
+        let formRegister = {
+          name: this.formSignUp.name,
+          password: sha1(this.formSignUp.passwd),
+        };
+        let response = await this.$rest.user.register(formRegister);
+        if (response) {
+          if (response.success) {
+            this.$Message.success(response.message);
+            this.isShowRegister = false;
+          } else {
+            this.$Message.error(response.error);
+          }
+        }
+        setTimeout(msg, 10);
       },
     },
   };

@@ -8,6 +8,7 @@ Vue.use(Vuex);
 const state = {
   token: null,
   username: '',
+  authType: 'SESSION'
 };
 
 export default new Vuex.Store({
