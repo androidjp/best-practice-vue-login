@@ -6,8 +6,13 @@ import mutations from './mutation';
 Vue.use(Vuex);
 
 const state = {
+  user: {
+    name: ''
+  },
+
   token: null,
   username: '',
+
   authType: 'SESSION'
 };
 

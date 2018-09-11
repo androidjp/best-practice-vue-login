@@ -8,8 +8,9 @@ ajax.setTipFn((tips) => {
 
 export default {
   user: {
-    register: ajax.create('/api/token/register'),
-    login: ajax.create('/api/token/login'),
+    register: ajax.create('/api/session/register'),
+    login: ajax.create('/api/session/login'),
+    session: ajax.query('/api'),
     token: ajax.query('/api/token'),
   },
   auth: {

@@ -56,7 +56,6 @@
   import sha1 from 'sha1';
   import {
     mapState,
-    mapGetters,
     mapActions,
   } from 'vuex';
 
@@ -138,6 +137,7 @@
     methods: {
       ...mapActions({
         setAuthType: 'setAuthType',
+        userLogin: 'userLogin'
       }),
       handleSubmit (name) {
         console.log('authType => ', this.authType);
@@ -166,6 +166,7 @@
         let response = await this.$rest.user.login(formData);
         if (response) {
           if (response.success) {
+            this.userLogin(response);
             this.$Message.success(response.message);
             this.$router.push('/');
           } else {
@@ -183,7 +184,10 @@
           name: this.formSignUp.name,
           password: sha1(this.formSignUp.passwd),
         };
-        let response = await this.$rest.user.register(formRegister);
+        let response = await this.$rest.user.register(formRegister).catch(err => {
+          setTimeout(msg, 10);
+          this.$Message.error(err);
+        });
         if (response) {
           if (response.success) {
             this.$Message.success(response.message);

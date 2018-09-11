@@ -4,8 +4,8 @@ const actions = {
   userLogin ({commit}, data) {
     commit(types.LOGIN, data);
   },
-  userLoginOut ({commit}) {
-    commit(types.LOGINOUT);
+  userLogOut ({commit}) {
+    commit(types.LOGOUT);
   },
   setAuthType ({commit}, data) {
     commit(types.SET_AUTH_TYPE, data);

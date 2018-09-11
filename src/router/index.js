@@ -12,8 +12,7 @@ const router = new Router({
       name: 'HelloWorld',
       component: HelloWorld,
       meta: {
-        // this means need to login
-        requireAuth: true,
+        requireLogin: true // 添加该字段，表示进入这个路由是需要登录的
       },
     },
     {
@@ -24,23 +23,23 @@ const router = new Router({
   ],
 });
 
-router.beforeEach((to, from, next) => {
-  let token = localStorage.getItem('token');
-  if (to.meta.requireAuth) {
-    // if meet the criteria : exist meta.requireAuth
-    if (token) {
-      next();
-    } else {
-      next({
-        path: '/login',
-        query: {
-          redirect: to.fullPath,
-        },
-      });
-    }
-  } else {
-    next();
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   let token = localStorage.getItem('token');
+//   if (to.meta.requireAuth) {
+//     // if meet the criteria : exist meta.requireAuth
+//     if (token) {
+//       next();
+//     } else {
+//       next({
+//         path: '/login',
+//         query: {
+//           redirect: to.fullPath,
+//         },
+//       });
+//     }
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;

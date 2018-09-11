@@ -2,20 +2,39 @@ import * as types from './mutation-types';
 
 const mutations = {
   [types.LOGIN] (state, data) {
-    localStorage.setItem('token', data.token);
-    state.token = data;
-    localStorage.setItem('username', data.name);
-    state.username = data.name;
+    switch (state.authType) {
+      case 'SESSION':
+        state.user.name = data.name;
+        localStorage.setItem('user', data.name);
+        break;
+      case 'JWT':
+        localStorage.setItem('token', data.token);
+        state.token = data;
+        localStorage.setItem('username', data.name);
+        state.username = data.name;
+        break;
+    }
   },
-  [types.LOGINOUT] (state) {
-    localStorage.removeItem('token');
-    state.token = null;
-    localStorage.setItem('username');
-    state.username = null;
+  [types.LOGOUT] (state) {
+    switch (state.authType) {
+      case 'SESSION':
+        state.user = {};
+        localStorage.removeItem('user');
+        break;
+      case 'JWT':
+        localStorage.removeItem('token');
+        state.token = null;
+        localStorage.setItem('username');
+        state.username = null;
+        break;
+    }
+  },
+  [types.DELSESSION] (state) {
+    localStorage.removeItem('session');
   },
   [types.SET_AUTH_TYPE] (state, data) {
     state.authType = data.type;
-  }
+  },
 };
 
 export default mutations;
