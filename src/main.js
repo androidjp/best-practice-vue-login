@@ -5,7 +5,6 @@ import App from './App';
 import router from './router';
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
-import axiosWithInterceptor from './common/interceptor.axios';
 
 Vue.use(iView);
 

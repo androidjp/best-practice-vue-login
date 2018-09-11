@@ -40,10 +40,10 @@
         </Card>
         <Card style="width:340px; left: -170px;">
           <div style="text-align:center">
-            <RadioGroup v-model='authType'>
-              <Radio label='SESSION'></Radio>
-              <Radio label='JWT'></Radio>
-              <Radio label='PASSPORT'></Radio>
+            <RadioGroup v-model='curAuthType'>
+              <Radio label='SESSION' value='SESSION'></Radio>
+              <Radio label='JWT' value='JWT'></Radio>
+              <Radio label='PASSPORT' value='PASSPORT'></Radio>
             </RadioGroup>
           </div>
         </Card>
@@ -88,6 +88,7 @@
       };
 
       return {
+        myCurAuthType: 'SESSION',
         isShowRegister: false,
         formLogin: {
           user: '',
@@ -124,10 +125,19 @@
       ...mapState({
         authType: state => state.authType,
       }),
+      curAuthType: {
+        get: function () {
+          return this.myCurAuthType;
+        },
+        set: function (newVal) {
+          this.myCurAuthType = newVal;
+          this.setAuthType({type: newVal});
+        },
+      },
     },
     methods: {
       ...mapActions({
-
+        setAuthType: 'setAuthType',
       }),
       handleSubmit (name) {
         console.log('authType => ', this.authType);

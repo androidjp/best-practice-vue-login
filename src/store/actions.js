@@ -7,6 +7,9 @@ const actions = {
   userLoginOut ({commit}) {
     commit(types.LOGINOUT);
   },
+  setAuthType ({commit}, data) {
+    commit(types.SET_AUTH_TYPE, data);
+  }
 };
 
 export default actions;

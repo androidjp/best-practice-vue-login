@@ -1,7 +1,8 @@
-import axios from 'axios';
-
+// import axios from 'axios';
+import axios  from '../common/interceptor.axios';
 class Ajax {
   constructor (options) {
+
     this.$http = axios;
     this.baseUrl = options && options.baseUrl ? options.baseUrl : '';
     this.authUrl = options && options.authUrl ? options.authUrl : '';

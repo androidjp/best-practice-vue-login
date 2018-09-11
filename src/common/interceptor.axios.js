@@ -1,11 +1,16 @@
 import axios from 'axios';
 import router from '@/router';
+import store from '../store'
 
 axios.default.timeout = 10000;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 // axios intercept request
 axios.interceptors.request.use(config => {
+  console.log('-------------');
+  console.log(store.state.authType);
+  console.log('-------------');
+
     // judge if localStorage exist token, then should add the token on every http request header
     if (localStorage.getItem('token')) {
       config.headers.Authorization = `token ${localStorage.getItem('token')}`.replace(/(^")|("$)/g, '');

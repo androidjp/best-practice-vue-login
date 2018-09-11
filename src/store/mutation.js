@@ -13,6 +13,9 @@ const mutations = {
     localStorage.setItem('username');
     state.username = null;
   },
+  [types.SET_AUTH_TYPE] (state, data) {
+    state.authType = data.type;
+  }
 };
 
 export default mutations;
