@@ -134,10 +134,21 @@
         },
       },
     },
+    created() {
+      switch (this.authType) {
+        case 'SESSION':
+          if(localStorage.getItem('user')) {
+            this.$router.push('/');
+          }
+          break;
+        case 'JWT':
+          break;
+      }
+    },
     methods: {
       ...mapActions({
         setAuthType: 'setAuthType',
-        userLogin: 'userLogin'
+        userLogin: 'userLogin',
       }),
       handleSubmit (name) {
         console.log('authType => ', this.authType);
@@ -170,7 +181,11 @@
             this.$Message.success(response.message);
             this.$router.push('/');
           } else {
-            this.$Message.error(response.error);
+            try {
+              this.$Message.error(response.message || response.error);
+            } catch (e) {
+              this.$Message.error(e);
+            }
           }
         }
         setTimeout(msg, 10);
@@ -193,7 +208,7 @@
             this.$Message.success(response.message);
             this.isShowRegister = false;
           } else {
-            this.$Message.error(response.error);
+            this.$Message.error(response.message || response.error);
           }
         }
         setTimeout(msg, 10);

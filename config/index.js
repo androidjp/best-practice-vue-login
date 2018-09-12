@@ -13,9 +13,7 @@ module.exports = {
     proxyTable: {
         '/api': {
           target: 'http://localhost:9999',
-          pathRewrite: {
-            '^/api/token/login': '/api/token/login'
-          }
+          pathRewrite: {}
         }
     },
 

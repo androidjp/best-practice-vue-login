@@ -4,8 +4,8 @@ const mutations = {
   [types.LOGIN] (state, data) {
     switch (state.authType) {
       case 'SESSION':
-        state.user.name = data.name;
-        localStorage.setItem('user', data.name);
+        state.user = data.user;
+        localStorage.setItem('user', data.user);
         break;
       case 'JWT':
         localStorage.setItem('token', data.token);
@@ -18,7 +18,7 @@ const mutations = {
   [types.LOGOUT] (state) {
     switch (state.authType) {
       case 'SESSION':
-        state.user = {};
+        state.user = '';
         localStorage.removeItem('user');
         break;
       case 'JWT':

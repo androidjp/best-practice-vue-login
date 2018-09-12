@@ -9,8 +9,13 @@ ajax.setTipFn((tips) => {
 export default {
   user: {
     register: ajax.create('/api/session/register'),
+
     login: ajax.create('/api/session/login'),
+    logout:ajax.query('/api/session/logout'),
     session: ajax.query('/api'),
+
+    loginWithToken: ajax.create('/api/token/login'),
+    logoutWithToken:ajax.query('/api/token/logout'),
     token: ajax.query('/api/token'),
   },
   auth: {
