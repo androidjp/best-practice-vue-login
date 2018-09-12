@@ -15,7 +15,7 @@ export default {
     session: ajax.query('/api'),
 
     loginWithToken: ajax.create('/api/token/login'),
-    logoutWithToken:ajax.query('/api/token/logout'),
+    registerWithToken: ajax.create('/api/token/register'),
     token: ajax.query('/api/token'),
   },
   auth: {

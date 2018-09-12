@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import HelloWorld from '@/components/HelloWorld';
 import Login from '@/components/Login';
-// import store from '../store';
+import store from '../store';
 
 Vue.use(Router);
 
@@ -27,37 +27,38 @@ const router = new Router({
   ],
 });
 
-// router.beforeEach((to, from, next) => {
-//
-//   switch (store.state.authType) {
-//     case 'SESSION':
-//       let user = localStorage.getItem('user');
-//       if (to.meta.requireNotLogin && user) {
-//         next({path: '/'});
-//       }
-//       next();
-//       break;
-//
-//     case 'JWT':
-//       let token = localStorage.getItem('token');
-//       if (to.meta.requireAuth) {
-//         // if meet the criteria : exist meta.requireAuth
-//         if (token) {
-//           next();
-//         } else {
-//           next({
-//             path: '/login',
-//             query: {
-//               redirect: to.fullPath,
-//             },
-//           });
-//         }
-//       } else {
-//         next();
-//       }
-//       break;
-//   }
-// });
+router.beforeEach((to, from, next) => {
+
+  switch (store.state.authType) {
+    case 'SESSION':
+      let user = localStorage.getItem('user');
+      if (to.meta.requireNotLogin && user) {
+        next({path: '/'});
+      } else {
+        next();
+      }
+      break;
+
+    case 'JWT':
+      let token = localStorage.getItem('token');
+      if (to.meta.requireLogin) {
+        // if meet the criteria : exist meta.requireAuth
+        if (token) {
+          next();
+        } else {
+          next({
+            path: '/login',
+            query: {
+              redirect: to.fullPath,
+            },
+          });
+        }
+      } else {
+        next();
+      }
+      break;
+  }
+});
 
 
 export default router;

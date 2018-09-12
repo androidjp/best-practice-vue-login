@@ -43,7 +43,6 @@
             <RadioGroup v-model='curAuthType'>
               <Radio label='SESSION' value='SESSION'></Radio>
               <Radio label='JWT' value='JWT'></Radio>
-              <Radio label='PASSPORT' value='PASSPORT'></Radio>
             </RadioGroup>
           </div>
         </Card>
@@ -134,17 +133,20 @@
         },
       },
     },
-    created() {
-      switch (this.authType) {
-        case 'SESSION':
-          if(localStorage.getItem('user')) {
-            this.$router.push('/');
-          }
-          break;
-        case 'JWT':
-          break;
-      }
-    },
+    // created() {
+    //   switch (this.authType) {
+    //     case 'SESSION':
+    //       if(localStorage.getItem('user')) {
+    //         this.$router.push('/');
+    //       }
+    //       break;
+    //     case 'JWT':
+    //       if(localStorage.getItem('token')) {
+    //         this.$router.push('/');
+    //       }
+    //       break;
+    //   }
+    // },
     methods: {
       ...mapActions({
         setAuthType: 'setAuthType',
@@ -174,7 +176,15 @@
           name: this.formLogin.user,
           password: sha1(this.formLogin.password),
         };
-        let response = await this.$rest.user.login(formData);
+        let response = null;
+        switch(this.authType) {
+          case 'SESSION':
+            response = await this.$rest.user.login(formData);
+            break;
+          case 'JWT':
+            response = await this.$rest.user.loginWithToken(formData);
+            break;
+        }
         if (response) {
           if (response.success) {
             this.userLogin(response);
@@ -199,10 +209,15 @@
           name: this.formSignUp.name,
           password: sha1(this.formSignUp.passwd),
         };
-        let response = await this.$rest.user.register(formRegister).catch(err => {
-          setTimeout(msg, 10);
-          this.$Message.error(err);
-        });
+        let response = null;
+        switch(this.authType) {
+          case 'SESSION':
+            response = await this.$rest.user.register(formRegister);
+            break;
+          case 'JWT':
+            response = await this.$rest.user.registerWithToken(formRegister);
+            break;
+        }
         if (response) {
           if (response.success) {
             this.$Message.success(response.message);

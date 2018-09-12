@@ -10,20 +10,21 @@
 
   export default {
     name: 'HelloWorld',
-    data() {
+    data () {
       return {
-        user:''
+        user: '',
       };
     },
     computed: {
       ...mapState({
         authType: state => state.authType,
+        token: state => state.token,
       }),
     },
     methods: {
       ...mapActions({
-        userLogOut:'userLogOut'
-      })
+        userLogOut: 'userLogOut',
+      }),
     },
     created () {
       // 当主页刷新时，如果服务端设置的cookie（包含sessionId）
@@ -32,28 +33,42 @@
       this.$rest.user[methodName](null).then(res => {
         if (!res.session) {
           this.userLogOut();
-        }else {
+          this.$router.push('/login');
+        } else {
           this.user = localStorage.getItem('user');
         }
       })
-      .catch(err => {
-        this.$Message.error(`${err.message}`, 'ERROR!');
-      });
+        .catch(err => {
+          this.$Message.error(`${err.message}`, 'ERROR!');
+        });
     },
     methods: {
       ...mapActions(['userLogOut']),
-      logOut() {
-        this.$rest.user.logout(null).then(res=> {
-          if(!res.session) {
+      logOut () {
+        switch (this.authType) {
+          case 'SESSION':
+            this.$rest.user.logout(null).then(res => {
+              if (res.success) {
+                this.userLogOut();
+                this.$Message.success(res.message);
+                this.$router.push('/login');
+              }
+            }).catch(err => {
+              this.$Message.error(`${err.message}`, 'ERROR!');
+            });
+            break;
+          case 'JWT':
             this.userLogOut();
-            this.$Message.success(res.message);
-            // this.$router.push('/');
-          }
-        }).catch(err => {
-          this.$Message.error(`${err.message}`, 'ERROR!');
-        })
-      }
-    }
+            if (!this.token) {
+              this.$router.push('/login');
+              this.$Message.success('登出成功');
+            } else {
+              this.$Message.success('登出失败');
+            }
+            break;
+        }
+      },
+    },
   };
 </script>
 
