@@ -21,17 +21,12 @@
         token: state => state.token,
       }),
     },
-    methods: {
-      ...mapActions({
-        userLogOut: 'userLogOut',
-      }),
-    },
     created () {
       // 当主页刷新时，如果服务端设置的cookie（包含sessionId）
       // 的时效到了的话，便会提示未登录
       let methodName = (this.authType === 'SESSION' ? 'session' : 'token');
       this.$rest.user[methodName](null).then(res => {
-        if (!res.session) {
+        if (!res[methodName]) {
           this.userLogOut();
           this.$router.push('/login');
         } else {
@@ -43,7 +38,9 @@
         });
     },
     methods: {
-      ...mapActions(['userLogOut']),
+      ...mapActions({
+        userLogOut: 'userLogOut',
+      }),
       logOut () {
         switch (this.authType) {
           case 'SESSION':

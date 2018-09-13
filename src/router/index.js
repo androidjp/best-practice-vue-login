@@ -27,7 +27,18 @@ const router = new Router({
   ],
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+
+  let isSession = localStorage.getItem('user');
+  let isToken = localStorage.getItem('token');
+  if (!isSession && !isToken) {
+    if (to.meta.requireLogin) {
+      return next('/login');
+    } else {
+      return next();
+    }
+  }
+  store.state.authType = isToken ? 'JWT' : 'SESSION';
 
   switch (store.state.authType) {
     case 'SESSION':

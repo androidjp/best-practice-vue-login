@@ -86,7 +86,6 @@
       };
 
       return {
-        myCurAuthType: 'SESSION',
         isShowRegister: false,
         formLogin: {
           user: '',
@@ -125,10 +124,9 @@
       }),
       curAuthType: {
         get: function () {
-          return this.myCurAuthType;
+          return this.authType;
         },
         set: function (newVal) {
-          this.myCurAuthType = newVal;
           this.setAuthType({type: newVal});
         },
       },
