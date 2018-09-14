@@ -45,7 +45,7 @@
         switch (this.authType) {
           case 'SESSION':
             this.$rest.user.logout(null).then(res => {
-              if (res.success) {
+              if (res.success || !res.session) {
                 this.userLogOut();
                 this.$Message.success(res.message);
                 this.$router.push('/login');
